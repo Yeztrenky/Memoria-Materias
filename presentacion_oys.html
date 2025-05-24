@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O&M en Venezuela - Presentación Interactiva</title>
+    <style>
+        :root {
+            --color-primario: #005A9C; /* Azul oscuro profesional */
+            --color-secundario: #00AEEF; /* Azul claro vibrante */
+            --color-acento: #FDB813; /* Amarillo/Naranja para acentos */
+            --color-texto: #333333;
+            --color-fondo: #f4f7f6;
+            --color-blanco: #FFFFFF;
+            --color-advertencia-fondo: #fff3cd;
+            --color-advertencia-texto: #856404;
+            --color-advertencia-borde: #ffeeba;
+            --sombra-caja: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--color-fondo);
+            color: var(--color-texto);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .presentation-container {
+            background-color: var(--color-blanco);
+            border-radius: 12px;
+            box-shadow: var(--sombra-caja);
+            overflow: hidden;
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen {
+            display: none; /* Ocultar todas las pantallas por defecto */
+            padding: 30px 40px;
+            min-height: 400px; /* Altura mínima para contenido */
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .screen.active {
+            display: block; /* Mostrar solo la pantalla activa */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .screen-title {
+            color: var(--color-primario);
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            text-align: center;
+            border-bottom: 2px solid var(--color-secundario);
+            padding-bottom: 10px;
+        }
+
+        .content-block {
+            display: flex;
+            align-items: flex-start; /* Alinea el icono con la primera línea de texto */
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fdfdfd;
+            border-radius: 8px;
+            border-left: 5px solid var(--color-secundario);
+        }
+
+        .content-block svg {
+            width: 40px;
+            height: 40px;
+            fill: var(--color-primario);
+            margin-right: 15px;
+            flex-shrink: 0; /* Evita que el icono se encoja */
+        }
+        
+        .content-block p, .content-block ul {
+            font-size: 1em;
+            flex-grow: 1;
+        }
+
+        .content-block ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .content-block ul li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 20px;
+        }
+        .content-block ul li::before {
+            content: "🔹";
+            color: var(--color-secundario);
+            position: absolute;
+            left: 0;
+            font-size: 0.9em;
+        }
+
+        .warning-block {
+            background-color: var(--color-advertencia-fondo);
+            color: var(--color-advertencia-texto);
+            border-left-color: var(--color-acento);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        .warning-block svg {
+            fill: var(--color-acento);
+        }
+        .warning-block strong {
+            color: var(--color-advertencia-texto);
+        }
+         .warning-block ul li::before {
+            color: var(--color-acento);
+        }
+
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 40px;
+            background-color: var(--color-primario);
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .nav-button {
+            background-color: var(--color-secundario);
+            color: var(--color-blanco);
+            border: none;
+            padding: 12px 25px;
+            font-size: 1em;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .nav-button:hover {
+            background-color: #0095c7; /* Un poco más oscuro al pasar el mouse */
+            transform: translateY(-2px);
+        }
+
+        .nav-button:disabled {
+            background-color: #cccccc;
+            color: #666666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Iconos específicos (SVGs Inline) */
+        .icon-idea svg { fill: var(--color-acento); } /* Para conceptos clave */
+        .icon-book svg { fill: var(--color-secundario); } /* Para fuentes */
+        .icon-summary svg { fill: #4CAF50; } /* Verde para resumen */
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .presentation-container {
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+            .screen {
+                padding: 20px;
+                min-height: 300px;
+            }
+            .screen-title {
+                font-size: 1.5em;
+            }
+            .content-block {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .content-block svg {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            .nav-button {
+                padding: 10px 15px;
+                font-size: 0.9em;
+            }
+            .navigation {
+                padding: 15px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        <!-- Pantalla 1: Introducción -->
+        <div class="screen active" id="screen-1">
+            <h2 class="screen-title">¡Hola! Hablemos de O&M en Venezuela 🇻🇪</h2>
+            <div class="content-block">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+                <p>
+                    Imagina que queremos que las cosas en una oficina grande, como las del gobierno, funcionen súper bien, ¡como un reloj!
+                    Bueno, en Venezuela, hace tiempo, más o menos cuando tus abuelos eran jóvenes, empezaron a pensar en "Organización y Métodos" (O&M).
+                    Esto es como tener un plan genial para que todo sea más fácil y rápido en el trabajo del gobierno.
+                </p>
+            </div>
+        </div>
+
+        <!-- Pantalla 2: Origen y Desarrollo (50s-60s) -->
+        <div class="screen" id="screen-2">
+            <h2 class="screen-title">Los Comienzos: Años 50 y 60 ⏳</h2>
+            <div class="content-block">
+                <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg> <!-- Icono de nube y flecha (desarrollo) -->
+                <div>
+                    <p><strong>¡Nace una idea!</strong> En los años 1950 y 1960, Venezuela quería ser más moderna.</p>
+                    <ul>
+                        <li>En <strong>1958</strong>, se creó una escuela especial llamada <strong>ENAHP</strong>. ¡Era como una escuela de superhéroes para que la gente aprendiera a organizar el gobierno!</li>
+                        <li>Otros países y organizaciones grandes como la ONU (¡como los Vengadores del mundo!) ayudaron a Venezuela a pensar cómo mejorar.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pantalla 3: Creación de OCOS -->
+        <div class="screen" id="screen-3">
+            <h2 class="screen-title">Una Oficina Súper Importante: OCOS 🏢</h2>
+            <div class="content-block icon-idea">
+                <svg viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-2.3l-.85-.6A4.995 4.995 0 0 1 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.06-2.15 4.1z"/></svg> <!-- Icono de idea/bombilla -->
+                <p>
+                    En <strong>1969</strong>, ¡se creó la <strong>OCOS</strong>! Era la Oficina Central de Organización y Sistemas.
+                    Piénsalo como el cerebro principal que ayudaba a todas las partes del gobierno a:
+                </p>
+                <ul>
+                    <li>Organizar el trabajo.</li>
+                    <li>Encontrar las mejores formas de hacer las cosas (métodos).</li>
+                    <li>Usar sistemas para que todo fuera más eficiente.</li>
+                </ul>
+                <p>¡La OCOS fue clave para que O&M se usara en todo el gobierno!</p>
+            </div>
+        </div>
+
+        <!-- Pantalla 4: Años 70-80 -->
+        <div class="screen" id="screen-4">
+            <h2 class="screen-title">O&M Crece Fuerte: Años 70 y 80 💪</h2>
+            <div class="content-block">
+                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg> <!-- Icono de personas/equipo -->
+                <p>
+                    Durante los años 1970 y 1980, ¡la idea de O&M se hizo muy popular!
+                </p>
+                <ul>
+                    <li>Las empresas grandes del gobierno, como PDVSA (la que saca petróleo), y los ministerios (las oficinas grandes de los ministros) empezaron a usar O&M.</li>
+                    <li>Las universidades importantes, como la UCV y la UCAB, también enseñaban a sus estudiantes sobre O&M. ¡Así más gente sabía cómo organizar bien las cosas!</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Pantalla 5: Influencias Clave -->
+        <div class="screen" id="screen-5">
+            <h2 class="screen-title">¿De Dónde Vinieron las Ideas? 🤔</h2>
+            <div class="content-block icon-idea">
+                 <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zm0 10.5c-2.48 0-4.5-2.02-4.5-4.5S9.52 6 12 6s4.5 2.02 4.5 4.5-2.02 4.5-4.5 4.5zm0-7C10.62 8 9.5 9.12 9.5 10.5S10.62 13 12 13s2.5-1.12 2.5-2.5S13.38 8 12 8z"/></svg> <!-- Icono de ojo (ver/influencia) -->
+                <div>
+                    <p>Venezuela no inventó O&M solita. ¡Recibió ayuda e ideas de otros lugares!</p>
+                    <ul>
+                        <li><strong>Modelos de otros países:</strong> Se fijaron en cómo países como Estados Unidos y los de Europa organizaban sus cosas. ¡Como cuando ves a un amigo hacer un truco y tú lo aprendes!</li>
+                        <li><strong>Ayuda internacional:</strong> Organizaciones como la ONU y el Banco Mundial dieron consejos y apoyo para que Venezuela fuera más moderna.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pantalla 6: Fuentes Específicas -->
+        <div class="screen" id="screen-6">
+            <h2 class="screen-title">¿Dónde Leer Más? ¡Los Libros! 📚</h2>
+            <div class="content-block warning-block">
+                <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg> <!-- Icono de advertencia, usado para destacar fuentes -->
+                <div>
+                    <p><strong>¡Estos son como los diarios secretos que cuentan la historia!</strong> Si quisieras ser un detective de O&M, podrías buscar:</p>
+                    <ul>
+                        <li><strong>Libros de expertos:</strong> Como los de Brewer-Carías o Landaeta, que escribieron sobre cómo se organizaba el gobierno.</li>
+                        <li><strong>Papeles oficiales:</strong> Como la Gaceta Oficial donde se anunció la creación de la OCOS.</li>
+                        <li><strong>Informes de la ONU:</strong> Papeles donde la ONU contaba cómo ayudaba a Venezuela.</li>
+                        <li><strong>Manuales del IESA:</strong> ¡Libros de una escuela (IESA) que enseñaba O&M!</li>
+                    </ul>
+                    <p><em>Estos documentos son importantes para entender bien cómo pasó todo.</em></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pantalla 7: Resumen Final -->
+        <div class="screen" id="screen-7">
+            <h2 class="screen-title">En Resumen... ¡Lo Logramos! 🎉</h2>
+            <div class="content-block icon-summary">
+                 <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg> <!-- Icono de estrella para resumen -->
+                <div>
+                    <p>¡Así fue como O&M llegó y creció en Venezuela!</p>
+                    <ul>
+                        <li>Comenzó a mediados del siglo XX para hacer el gobierno más eficiente.</li>
+                        <li>Se crearon escuelas (ENAHP) y oficinas especiales (OCOS) para ello.</li>
+                        <li>Se aprendió de otros países y con ayuda internacional.</li>
+                        <li>¡Y todo esto ayudó a que el trabajo en el sector público fuera mejor organizado!</li>
+                    </ul>
+                    <p><strong>O&M es como tener un mapa y herramientas para hacer un gran trabajo, ¡bien hecho y sin perderse!</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navegación -->
+        <div class="navigation">
+            <button class="nav-button" id="prevBtn" disabled>⬅️ Anterior</button>
+            <button class="nav-button" id="nextBtn">Siguiente ➡️</button>
+        </div>
+    </div>
+
+    <script>
+        const screens = document.querySelectorAll('.screen');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        let currentScreenIndex = 0;
+
+        function showScreen(index) {
+            screens.forEach((screen, i) => {
+                screen.classList.toggle('active', i === index);
+            });
+
+            // Actualizar estado de los botones
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === screens.length - 1;
+        }
+
+        prevBtn.addEventListener('click', () => {
+            if (currentScreenIndex > 0) {
+                currentScreenIndex--;
+                showScreen(currentScreenIndex);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentScreenIndex < screens.length - 1) {
+                currentScreenIndex++;
+                showScreen(currentScreenIndex);
+            }
+        });
+
+        // Mostrar la primera pantalla al cargar
+        showScreen(currentScreenIndex);
+    </script>
+
+</body>
+</html>
